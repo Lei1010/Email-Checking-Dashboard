@@ -4,15 +4,15 @@ import seaborn as sns
 
 import matplotlib.dates as mdates
 
-import dash
-from dash import html
-from dash import dcc
+from dash import Dash, html, dcc
+from dash.dependencies import Input, Output
 import plotly.graph_objects as go
 import plotly.express as px
 
 
 def total_by_date(df_total, df_null):
     fig = go.Figure()
+
     fig.add_trace(go.Scatter(x=df_total['received_date'],
                              y=df_total['count_mail'],
                              name='Total Mail'))
@@ -21,6 +21,9 @@ def total_by_date(df_total, df_null):
                              y=df_null['count_mail'],
                              name='Null Subject Mail',
                              mode='markers'))
+
+    fig.update_layout(xaxis_title='Month',
+                      yaxis_title='Total Mail')
 
     return fig
 
@@ -42,13 +45,27 @@ null_subject = raw_report_df[~raw_report_df.SUBJECT.notna()].groupby('received_d
     count_mail=pd.NamedAgg(column='PATH', aggfunc='count')
 )
 
-app = dash.Dash()
+vendor = raw_report_df[raw_report_df['FROM'].str.contains('loreal.com', case=False)]. \
+    groupby('received_date', as_index=False).agg(count_mail=pd.NamedAgg(column='PATH', aggfunc='count'))
+
+app = Dash()
 app.layout = html.Div(id='parent',
                       children=[
-                          html.H1(id='H1', children='Checking Email Report', style={'textAlign': 'center',
-                                                                                    'marginTop': 40,
-                                                                                    'marginBottom': 40}),
-                          dcc.Graph(id='total_by_date', figure=total_by_date(total_mail, null_subject))
+                          html.H1(id='H1', children='Checking Email Report',
+                                  style={'textAlign': 'left',
+                                         'marginTop': 40,
+                                         'marginBottom': 40,
+                                         'marginLeft': 40,
+                                         'font-family': 'courier',
+                                         }),
+                          dcc.Graph(id='total_by_date', figure=total_by_date(total_mail, null_subject)),
+                          html.H3(id='vendor-h3', children='Total Email of Top 10 Vendors',
+                                  style={'font-family': 'courier',
+                                         'marginTop': 20,
+                                         'marginLeft': 40,
+                                         'textAlign': 'left'
+                                         }),
+                          dcc.Dropdown(['Loreal', 'Blackmores'], 'Loreal', id='vendor-dropdown')
                       ]
                       )
 
