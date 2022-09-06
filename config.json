@@ -1,0 +1,23 @@
+{ "snowflake" :              
+		{
+		"account"   : "ih73640.australia-east.azure",
+                "user"  : "LIENNGUYEN2@PROFECTUSGROUP.COM",
+                "warehouse" : "W1",
+                "role"      : "PVN_AUDIT_LEADS",
+                "database"  : "CHEMIST_WAREHOUSE",
+                "schema"    : "AUDIT_DEALMAN",
+                "password"  : "",
+		"authenticator" : "externalbrowser"
+              },
+"ETL_EML_STAT" :
+              {
+		"account"   : "ih73640.australia-east.azure",
+                "user"  : "LIENNGUYEN2@PROFECTUSGROUP.COM",
+                "warehouse" : "W1",
+                "role"      : "PVN_AUDIT_ETL",
+                "database"  : "EML_STAT",
+                "schema"    : "CWNZ01",
+                "password"  : "",
+		"authenticator" : "externalbrowser"
+              }
+}
